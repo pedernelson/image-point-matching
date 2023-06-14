@@ -1,92 +1,51 @@
 # Image Point Matching
 
 
+(x1_g1, y1_g1) and (x1_s1, y1_s1) are the same object in real life
 
-## Getting started
+ground_keypoints = [
+    [(x1_g1, y1_g1), (x2_g1, y2_g1), (x3_g1, y3_g1), (x4_g1, y4_g1), (x5_g1, y5_g1)],
+    [(x1_g2, y1_g2), (x2_g2, y2_g2), (x3_g2, y3_g2), (x4_g2, y4_g2), (x5_g2, y5_g2)],
+    [(x1_g3, y1_g3), (x2_g3, y2_g3), (x3_g3, y3_g3), (x4_g3, y4_g3), (x5_g3, y5_g3)]
+]
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+satellite_keypoints = [
+    [(x1_s1, y1_s1), (x2_s1, y2_s1), (x3_s1, y3_s1), (x4_s1, y4_s1), (x5_s1, y5_s1)],
+    [(x1_s2, y1_s2), (x2_s2, y2_s2), (x3_s2, y3_s2), (x4_s2, y4_s2), (x5_s2, y5_s2)],
+    [(x1_s3, y1_s3), (x2_s3, y2_s3), (x3_s3, y3_s3), (x4_s3, y4_s3), (x5_s3, y5_s3)]
+]
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-## Add your files
+Siamse Network:
+1. The model takes N images as input, where N is the number of images in the dataset.
+   For each image, the model extracts features using a pre-trained deep learning model, (tandem training)
+2. The model then uses a Siamese network to learn the similarities between the features extracted from the images.
+3. The model outputs the coordinates of the keypoints in each image. Where the coordinates are the same for the same object in real life.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Data preparation:
 
-```
-cd existing_repo
-git remote add origin https://gitlab.uvm.edu/jwboynto/image-point-matching.git
-git branch -M main
-git push -uf origin main
-```
+Collect and preprocess the dataset, including ground photo images, NAIP satellite images, and Google WorldCover land cover satellite images. Align and scale the images as needed.
+Label the keypoints in the images (e.g., building corners, unique trees, road corners, bridges) and their corresponding coordinates.
+Split the dataset into training, validation, and test sets.
+Model architecture:
 
-## Integrate with your tools
+Use a pre-trained deep learning model, such as a ResNet or VGG model, as the backbone for feature extraction. You can use these models in combination with Siamese or Triplet networks for learning similarities between keypoints.
+Create three input branches, one for each type of image (ground photo, NAIP satellite, and Google WorldCover). Each branch will process the corresponding image type and extract relevant features.
+Fuse the extracted features using concatenation or other techniques, and add a few fully connected layers to process the combined features.
+Use a final output layer to predict the coordinates of the keypoints in each image.
+Loss function and optimization:
 
-- [ ] [Set up project integrations](https://gitlab.uvm.edu/jwboynto/image-point-matching/-/settings/integrations)
+Define an appropriate loss function to minimize the difference between predicted and ground truth keypoints, such as Mean Squared Error (MSE) or Huber loss.
+Choose an optimizer, like Adam or SGD, to minimize the loss.
+Model training:
 
-## Collaborate with your team
+Train the model using the training dataset, and monitor its performance on the validation dataset.
+Use techniques such as learning rate scheduling, early stopping, and data augmentation to improve the model's generalization capabilities.
+Model evaluation:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Evaluate the model's performance on the test dataset using appropriate metrics, like Euclidean distance or Mean Absolute Error (MAE) between predicted and ground truth keypoints.
+Post-processing:
 
-## Test and Deploy
+For each image pair, identify the keypoints and their corresponding coordinates in each image.
+Filter the keypoints by finding those that correspond to the same object in real life, using a threshold based on the distance metric.
 
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
