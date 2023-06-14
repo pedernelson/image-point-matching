@@ -1,5 +1,8 @@
 # Image Point Matching
-![Chip](imagechip.png)
+![Chip](imgchip.png)
+![LabelledImg](labelling.png)
+![Mapped](mapping.png)
+
 
 (x1_g1, y1_g1) and (x1_s1, y1_s1) are the same object in real life
 
